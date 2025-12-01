@@ -11,7 +11,6 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    //セキュリティ観点からbuyer_idは除外
     protected $fillable = [
         'item_id',
         'purchase_price',
@@ -19,6 +18,9 @@ class Transaction extends Model
         'shipping_postal_code',
         'shipping_address',
         'shipping_building',
+        'seller_id',
+        'buyer_id',
+        'status',
     ];
 
     protected $casts = [
