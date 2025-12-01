@@ -33,11 +33,20 @@ class ProfileController extends Controller
         })
             ->where('status', Transaction::STATUS_WIP)
             ->with('item')
+            ->withCount([
+                'messages as unread_count' => function ($q) use ($user) {
+                    $q->where('is_read', false)
+                        ->where('to_user_id', $user->id);
+                }
+            ])
             ->get();
 
-        $wipItems = $wipTransactions->pluck('item')->filter();
+        // $wipItems = $wipTransactions->pluck('item')->filter();
+        $wipItems = $wipTransactions;
 
-        return view('profile', compact('profile', 'user', 'items', 'purchasedItems', 'wipItems'));
+        $totalUnread = $wipTransactions->sum('unread_count');
+
+        return view('profile', compact('profile', 'user', 'items', 'purchasedItems', 'wipItems', 'wipTransactions', 'totalUnread'));
     }
 
     //プロフィール編集画面の表示
