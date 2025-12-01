@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Item;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionService
 {
@@ -18,15 +20,19 @@ class TransactionService
                 throw new \RuntimeException('自分の商品は購入できません。');
             }
 
-            $buyer = auth()->user();
-            $buyer->transactions()->create([
+            Transaction::create([
                 'item_id' => $locked->id,
                 'purchase_price' => $locked->price,
                 'payment_method' => $paymentMethod,
                 'shipping_postal_code' => $shippingAddress['postal_code'] ?? null,
                 'shipping_address' => $shippingAddress['address'] ?? null,
                 'shipping_building' => $shippingAddress['building'] ?? null,
+                'buyer_id' => Auth::id(),
+                'seller_id' => $locked->seller_id,
+                'status' => Transaction::STATUS_WIP,
             ]);
+
+
             $locked->update(['is_sold' => true]);
             session()->forget("draft_address.{$item->id}");
         });
