@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Profile;
+use App\Models\Transaction;
 use App\Http\Requests\ProfileRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -14,12 +15,26 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $profile = Profile::firstOrNew(['user_id' => auth()->id()]);
+
         // 出品商品
         $items = $user->items()->latest()->get();
-        //購入商品
-        $transactions = $user->transactions()->with('item')->get();
+
+        //購入済み商品
+        $transactions = $user->transactions()
+            ->where('status', Transaction::STATUS_COMPLETED)
+            ->with('item')
+            ->get();
         $purchasedItems = $transactions->pluck('item')->filter();
-        return view('profile', compact('profile', 'user', 'items', 'purchasedItems'));
+
+        //取引中商品
+        $wipItems = $user->transactions()
+            ->where('status', Transaction::STATUS_WIP)
+            ->with('item')
+            ->get()
+            ->pluck('item')
+            ->filter();
+
+        return view('profile', compact('profile', 'user', 'items', 'purchasedItems', 'wipItems'));
     }
 
     //プロフィール編集画面の表示
