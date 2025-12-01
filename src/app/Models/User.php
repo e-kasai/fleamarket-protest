@@ -62,4 +62,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Item::class, 'favorites', 'user_id', 'item_id');
     }
+
+    //１人のユーザーは複数の取引コメントを投稿可
+    public function transactionMessages()
+    {
+        return $this->hasMany(TransactionMessage::class);
+    }
 }
