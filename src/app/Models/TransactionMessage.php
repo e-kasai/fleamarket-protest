@@ -13,7 +13,10 @@ class TransactionMessage extends Model
     protected $fillable = [
         'transaction_id',
         'user_id',
-        'message',
+        'to_user_id',
+        'body',
+        'image_path',
+        'is_read',
     ];
 
     //メッセージは1件の取引（Transaction）に属する
