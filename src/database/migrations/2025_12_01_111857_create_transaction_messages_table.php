@@ -11,15 +11,14 @@ class CreateTransactionMessagesTable extends Migration
         Schema::create('transaction_messages', function (Blueprint $table) {
             $table->id();
 
-            // どの取引のメッセージか
             $table->foreignId('transaction_id')->constrained('transactions')->cascadeOnDelete();
-
-            // 誰が送ったか
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-
-            // 本文
+            // 送信者
+            $table->unsignedBigInteger('user_id')->index();
+            // 受信者
+            $table->unsignedBigInteger('to_user_id')->index();
             $table->string('message', 400);
-
+            // 未読フラグ
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
     }
