@@ -41,6 +41,11 @@
 
         <div class="item-card">
             <a class="item-card__link" href="{{ route($linkRoute, $linkId) }}">
+                {{-- 未読メッセージ数の表示 --}}
+                @if (($item->unread_count ?? 0) > 0)
+                    <span class="item-card__badge">{{ $item->unread_count }}</span>
+                @endif
+
                 <img src="{{ $image }}" alt="{{ $name }}" class="item-card__img" />
                 <p class="item-card__name">
                     {{ $name }}
