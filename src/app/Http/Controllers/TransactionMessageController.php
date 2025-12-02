@@ -91,4 +91,26 @@ class TransactionMessageController extends Controller
 
         return back();
     }
+
+    public function update(TransactionMessageRequest $request, Transaction $transaction, TransactionMessage $message)
+    {
+        $validated = $request->validated();
+
+        // 自分のメッセージ以外は編集禁止
+        if ($message->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // 取引が「取引中（WIP）」でない場合は編集禁止
+        if ($transaction->status !== \App\Models\Transaction::STATUS_WIP) {
+            abort(403, 'この取引は完了しているため編集できません。');
+        }
+
+        // 更新実行
+        $message->update([
+            'body' => $validated['body'],
+        ]);
+
+        return back()->with('message', 'メッセージを更新しました');
+    }
 }
