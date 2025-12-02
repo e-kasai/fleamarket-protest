@@ -59,7 +59,7 @@
             <section class="transactions-messages">
                 @foreach ($transaction->messages as $message)
                     <div
-                        class="transactions-message {{ $message->from_user_id === auth()->id() ? "transactions-message--me" : "transactions-message--other" }}"
+                        class="transactions-message {{ $message->user_id === auth()->id() ? "transactions-message--me" : "transactions-message--other" }}"
                     >
                         <div class="transactions-message__avatar">
                             {{-- アイコンは仮。プロフィール画像があれば差し替え --}}
@@ -71,7 +71,7 @@
                                 <span class="transactions-message__user">{{ $message->user->name }}</span>
                                 <span class="transactions-message__time">{{ $message->created_at->format("Y/m/d H:i") }}</span>
                             </div>
-                            <p class="transactions-message__text">{{ $message->message }}</p>
+                            <p class="transactions-message__text">{{ $message->body }}</p>
 
                             @if ($message->user_id === auth()->id())
                                 <div class="transactions-message__actions">
@@ -87,6 +87,17 @@
 
             {{-- 入力フォーム（画面下部） --}}
             <section class="transactions-input">
+                {{-- エラー表示 --}}
+                @if ($errors->any())
+                    <div class="transactions-errors">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <form
                     method="POST"
                     action="{{ route("messages.store", $transaction->id) }}"
@@ -107,7 +118,7 @@
                     <div class="transactions-input__footer">
                         <label class="transactions-input__image-button">
                             画像を追加
-                            <input type="file" name="image" class="transactions-input__file" />
+                            <input type="file" name="image_path" class="transactions-input__file" />
                         </label>
 
                         <button type="submit" class="transactions-input__send">送信</button>
@@ -117,3 +128,30 @@
         </section>
     </main>
 @endsection
+
+// 本文入力保持
+@push("scripts")
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const textarea = document.querySelector('textarea[name="body"]');
+            const key = 'transaction_draft_{{ $transaction->id }}';
+
+            // ページ表示時：localStorage に残っている下書きをセット
+            const saved = localStorage.getItem(key);
+            if (saved) {
+                textarea.value = saved;
+            }
+
+            // 入力するたびに保存
+            textarea.addEventListener('input', () => {
+                localStorage.setItem(key, textarea.value);
+            });
+
+            // 送信時：下書きを削除
+            const form = textarea.closest('form');
+            form.addEventListener('submit', () => {
+                localStorage.removeItem(key);
+            });
+        });
+    </script>
+@endpush
