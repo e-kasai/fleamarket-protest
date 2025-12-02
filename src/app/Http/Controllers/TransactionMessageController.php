@@ -30,6 +30,7 @@ class TransactionMessageController extends Controller
                 ->orWhere('seller_id', $user->id);
         })
             ->where('status', Transaction::STATUS_WIP)
+            ->where('id', '!=', $transaction->id)
             ->with('item')
             ->withCount([
                 'messages as unread_count' => function ($query) use ($user) {
@@ -37,12 +38,24 @@ class TransactionMessageController extends Controller
                         ->where('to_user_id', $user->id);
                 }
             ])
+            ->orderByDesc(
+                TransactionMessage::select('created_at')
+                    ->whereColumn('transaction_id', 'transactions.id')
+                    ->latest()
+                    ->take(1)
+            )
             ->get();
 
         // 相手ユーザー情報
         $partner = $transaction->buyer_id === $user->id
             ? $transaction->seller
             : $transaction->buyer;
+
+        // 未読メッセージを既読に変更
+        TransactionMessage::where('transaction_id', $transaction->id)
+            ->where('to_user_id', $user->id)
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
 
         return view('transaction_chat', compact('transaction', 'wipTransactions', 'partner'));
     }
