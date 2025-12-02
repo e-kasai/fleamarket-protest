@@ -61,17 +61,25 @@
                     <div
                         class="transactions-message {{ $message->user_id === auth()->id() ? "transactions-message--me" : "transactions-message--other" }}"
                     >
-                        <div class="transactions-message__avatar">
-                            {{-- アイコンは仮。プロフィール画像があれば差し替え --}}
+                        <div class="transactions-message__profile">
+                            {{-- プロフィール画像と名前 --}}
+                            <span class="transactions-message__user">{{ $message->user->name }}</span>
                             <span class="transactions-message__avatar-circle"></span>
                         </div>
-
                         <div class="transactions-message__body">
+                            {{-- 日時と本文 --}}
                             <div class="transactions-message__header">
-                                <span class="transactions-message__user">{{ $message->user->name }}</span>
                                 <span class="transactions-message__time">{{ $message->created_at->format("Y/m/d H:i") }}</span>
                             </div>
                             <p class="transactions-message__text">{{ $message->body }}</p>
+                            {{-- 画像 --}}
+                            @if ($message->image_path)
+                                <img
+                                    class="transactions-message__image"
+                                    src="{{ asset("storage/" . $message->image_path) }}"
+                                    alt="送信画像"
+                                />
+                            @endif
 
                             @if ($message->user_id === auth()->id())
                                 <div class="transactions-message__actions">
