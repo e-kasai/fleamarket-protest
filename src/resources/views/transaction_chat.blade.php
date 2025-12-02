@@ -16,9 +16,9 @@
                         <a class="transactions-sidebar__link" href="{{ route("messages.show", $other->id) }}">
                             <div class="transactions-sidebar__text">
                                 <h2 class="transactions-sidebar__name">{{ $other->item->item_name }}</h2>
-                                @if (($other->unread_count ?? 0) > 0)
+                                {{-- @if (($other->unread_count ?? 0) > 0)
                                     <span class="transaction-sidebar__badge">{{ $other->unread_count }}</span>
-                                @endif
+                                @endif --}}
                             </div>
                         </a>
                     </li>
@@ -71,7 +71,10 @@
                             <div class="transactions-message__header">
                                 <span class="transactions-message__time">{{ $message->created_at->format("Y/m/d H:i") }}</span>
                             </div>
-                            <p class="transactions-message__text">{{ $message->body }}</p>
+                            {{-- <p class="transactions-message__text">{{ $message->body }}</p> --}}
+                            <p id="message-body-{{ $message->id }}" class="transactions-message__text">
+                                {{ $message->body }}
+                            </p>
                             {{-- 画像 --}}
                             @if ($message->image_path)
                                 <img
@@ -84,7 +87,15 @@
                             @if ($message->user_id === auth()->id())
                                 <div class="transactions-message__actions">
                                     {{-- 編集・削除はあとでFN010/FN011と連動 --}}
-                                    <a href="#" class="transactions-message__edit">編集</a>
+                                    @if ($transaction->status === \App\Models\Transaction::STATUS_WIP && $message->user_id === auth()->id())
+                                        <button
+                                            class="message-edit-btn"
+                                            data-update-url="{{ route("messages.update", ["transaction" => $transaction->id, "message" => $message->id]) }}"
+                                        >
+                                            編集
+                                        </button>
+                                    @endif
+
                                     <a href="#" class="transactions-message__delete">削除</a>
                                 </div>
                             @endif
@@ -106,6 +117,15 @@
                     </div>
                 @endif
 
+                {{-- 投稿後の編集用フォーム --}}
+                <form id="message-edit-form" method="POST" style="display: none">
+                    @csrf
+                    @method("PUT")
+                    <textarea name="body" id="message-edit-body"></textarea>
+                    <button type="submit">更新</button>
+                </form>
+
+                {{-- 新規投稿時のフォーム --}}
                 <form
                     method="POST"
                     action="{{ route("messages.store", $transaction->id) }}"
@@ -160,6 +180,23 @@
             form.addEventListener('submit', () => {
                 localStorage.removeItem(key);
             });
+        });
+
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('message-edit-btn')) {
+                const url = e.target.dataset.updateUrl;
+
+                const bodyEl = e.target.closest('.transactions-message').querySelector('.transactions-message__text');
+                const body = bodyEl.innerText;
+
+                const form = document.getElementById('message-edit-form');
+                const textarea = document.getElementById('message-edit-body');
+
+                textarea.value = body;
+                form.action = url;
+
+                form.style.display = 'block';
+            }
         });
     </script>
 @endpush
