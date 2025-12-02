@@ -8,6 +8,8 @@ use App\Http\Controllers\ExhibitController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\TransactionQueryController;
+use App\Http\Controllers\TransactionMessageController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
@@ -99,4 +101,29 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('message', '認証メールを再送しました。');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
+
+
+//取引（Transaction）まわり
+Route::get('/transactions/{transaction}', [TransactionQueryController::class, 'show'])
+    ->middleware(['auth', 'verified'])->name('transactions.show');
+
+//取引メッセージ（Message）まわり
+Route::prefix('transactions/{transaction}/messages')->middleware(['auth', 'verified'])->group(function () {
+
+    // チャット画面（FN002）
+    Route::get('/', [TransactionMessageController::class, 'show'])
+        ->name('messages.show');
+
+    // 取引チャット投稿（US002）
+    Route::post('/', [TransactionMessageController::class, 'store'])
+        ->name('messages.store');
+
+    // 編集（FN010）
+    Route::put('/{message}', [TransactionMessageController::class, 'update'])
+        ->name('messages.update');
+
+    // 削除（FN011）
+    Route::delete('/{message}', [TransactionMessageController::class, 'destroy'])
+        ->name('messages.destroy');
+});
 
