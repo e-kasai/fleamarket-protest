@@ -92,6 +92,7 @@ class TransactionMessageController extends Controller
         return back();
     }
 
+    //投稿済みメッセージ編集
     public function update(TransactionMessageRequest $request, Transaction $transaction, TransactionMessage $message)
     {
         $validated = $request->validated();
@@ -112,5 +113,22 @@ class TransactionMessageController extends Controller
         ]);
 
         return back()->with('message', 'メッセージを更新しました');
+    }
+
+    // 投稿済みメッセージ削除
+    public function destroy(Transaction $transaction, TransactionMessage $message)
+    {
+        // 取引とメッセージの紐づきチェック
+        if ($message->transaction_id !== $transaction->id) {
+            abort(404);
+        }
+
+        // 本人だけ削除可能
+        if ($message->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $message->delete();
+        return back()->with('message', 'メッセージを削除しました');;
     }
 }
