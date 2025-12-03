@@ -123,7 +123,12 @@ class TransactionMessageController extends Controller
             abort(404);
         }
 
-        // 本人だけ削除可能
+        // 取引完了後はメッセージ削除不可
+        if ($transaction->status !== Transaction::STATUS_WIP) {
+            abort(403, '取引完了後の為削除できません');
+        }
+
+        // 自分の投稿メッセージのみ削除可能
         if ($message->user_id !== Auth::id()) {
             abort(403);
         }
