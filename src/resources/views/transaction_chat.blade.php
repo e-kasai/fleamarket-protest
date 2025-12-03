@@ -86,7 +86,7 @@
 
                             @if ($message->user_id === auth()->id())
                                 <div class="transactions-message__actions">
-                                    {{-- 編集・削除はあとでFN010/FN011と連動 --}}
+                                    {{-- 編集 --}}
                                     @if ($transaction->status === \App\Models\Transaction::STATUS_WIP && $message->user_id === auth()->id())
                                         <button
                                             class="message-edit-btn"
@@ -95,8 +95,14 @@
                                             編集
                                         </button>
                                     @endif
-
-                                    <a href="#" class="transactions-message__delete">削除</a>
+                                    {{-- 削除 --}}
+                                    @if ($transaction->status === \App\Models\Transaction::STATUS_WIP && $message->user_id === auth()->id())
+                                        <form class="message-delete-form" method="POST" action="{{ route('messages.destroy', ['transaction' => $transaction->id, 'message' => $message->id]) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="message-delete-btn">削除</button>
+                                        </form>
+                                    @endif
                                 </div>
                             @endif
                         </div>
@@ -117,14 +123,6 @@
                     </div>
                 @endif
 
-                {{-- 投稿後の編集用フォーム --}}
-                <form id="message-edit-form" method="POST" style="display: none">
-                    @csrf
-                    @method("PUT")
-                    <textarea name="body" id="message-edit-body"></textarea>
-                    <button type="submit">更新</button>
-                </form>
-
                 {{-- 新規投稿時のフォーム --}}
                 <form
                     method="POST"
@@ -142,7 +140,6 @@
                     >
 {{ old("body") }}</textarea
                     >
-
                     <div class="transactions-input__footer">
                         <label class="transactions-input__image-button">
                             画像を追加
@@ -152,6 +149,15 @@
                         <button type="submit" class="transactions-input__send">送信</button>
                     </div>
                 </form>
+
+                {{-- 投稿後の編集用フォーム --}}
+                <form id="message-edit-form" method="POST" style="display: none">
+                    @csrf
+                    @method("PUT")
+                    <textarea name="body" id="message-edit-body"></textarea>
+                    <button type="submit">更新</button>
+                </form>
+
             </section>
         </section>
     </main>
@@ -169,6 +175,8 @@
             if (saved) {
                 textarea.value = saved;
             }
+
+
 
             // 入力するたびに保存
             textarea.addEventListener('input', () => {
