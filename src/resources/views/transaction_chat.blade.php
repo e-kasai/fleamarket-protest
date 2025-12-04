@@ -167,38 +167,31 @@
 {{-- 取引完了後：評価モーダル --}}
 @if ($showBuyerModal || $showSellerModal)
     <div id="ratingModal" class="rating-modal">
-        <div class="rating-modal__overlay"></div>
-
         <div class="rating-modal__content">
-            <h2 class="rating-modal__title">取引の評価をお願いします</h2>
+            <h1 class="rating-modal__title">取引が完了しました。</h1>
+            <p class="rating-modal__text">今回の取引相手はどうでしたか？</p>
 
             <form method="POST" action="{{ route("rating.store", $transaction->id) }}">
                 @csrf
 
                 <div class="rating-modal__stars">
-                    <label>
-                        <input type="radio" name="score" value="1" />
-                        ★1
-                    </label>
-                    <label>
-                        <input type="radio" name="score" value="2" />
-                        ★2
-                    </label>
-                    <label>
-                        <input type="radio" name="score" value="3" />
-                        ★3
-                    </label>
-                    <label>
-                        <input type="radio" name="score" value="4" />
-                        ★4
-                    </label>
-                    <label>
-                        <input type="radio" name="score" value="5" />
-                        ★5
-                    </label>
+                    <input type="radio" id="star5" name="score" value="5" />
+                    <label for="star5">★</label>
+
+                    <input type="radio" id="star4" name="score" value="4" />
+                    <label for="star4">★</label>
+
+                    <input type="radio" id="star3" name="score" value="3" />
+                    <label for="star3">★</label>
+
+                    <input type="radio" id="star2" name="score" value="2" />
+                    <label for="star2">★</label>
+
+                    <input type="radio" id="star1" name="score" value="1" />
+                    <label for="star1">★</label>
                 </div>
 
-                <button class="rating-modal__submit" type="submit">評価を送信する</button>
+                <button class="rating-modal__submit" type="submit">送信する</button>
             </form>
         </div>
     </div>
