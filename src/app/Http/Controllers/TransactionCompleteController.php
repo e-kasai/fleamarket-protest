@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TransactionCompletedMail;
 
 class TransactionCompleteController extends Controller
 {
@@ -26,6 +27,10 @@ class TransactionCompleteController extends Controller
         $transaction->update([
             'status' => Transaction::STATUS_CONFIRMED
         ]);
+
+        // 出品者にメール送信
+        Mail::to($transaction->item->seller->email)
+            ->send(new TransactionCompletedMail($transaction));
 
         return back();
     }
