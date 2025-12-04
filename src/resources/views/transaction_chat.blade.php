@@ -62,14 +62,13 @@
             </section>
 
             {{-- メッセージ一覧 --}}
-            <section class="transactions-messages">
+            <section class="transactions-message">
                 @foreach ($transaction->messages as $message)
                     <div
                         class="transactions-message {{ $message->user_id === auth()->id() ? "transactions-message--me" : "transactions-message--other" }}"
                     >
                         <div class="transactions-message__profile">
                             {{-- プロフィール画像と名前 --}}
-                            <span class="transactions-message__user">{{ $message->user->name }}</span>
                             <img
                                 class="avatar avatar--message"
                                 src="{{
@@ -79,13 +78,10 @@
                                 }}"
                                 alt="プロフィール画像"
                             />
+                            <span class="transactions-message__user">{{ $message->user->name }}</span>
                         </div>
+                        {{-- 本文 --}}
                         <div class="transactions-message__body">
-                            {{-- 日時と本文 --}}
-                            <div class="transactions-message__header">
-                                <span class="transactions-message__time">{{ $message->created_at->format("Y/m/d H:i") }}</span>
-                            </div>
-                            {{-- <p class="transactions-message__text">{{ $message->body }}</p> --}}
                             <p id="message-body-{{ $message->id }}" class="transactions-message__text">
                                 {{ $message->body }}
                             </p>
@@ -97,7 +93,7 @@
                                     alt="送信画像"
                                 />
                             @endif
-
+                        </div>
                             @if ($message->user_id === auth()->id())
                                 <div class="transactions-message__actions">
                                     {{-- 編集 --}}

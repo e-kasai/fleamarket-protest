@@ -20,7 +20,7 @@
     font-size: 30px;
     font-weight: 400;
     color: #ffffff;
-    margin:0 0 50px 0;
+    margin: 0 0 50px 0;
     text-align: center;
 }
 
@@ -51,9 +51,9 @@
     max-width: 200px;
     display: block;
     padding: 0 2px;
-    background: #EEEFEB;
+    background: #eeefeb;
     text-decoration: none;
-    margin:0 auto;
+    margin: 0 auto;
     border-radius: 5px;
 }
 
@@ -80,12 +80,12 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding:10px 30px;
+    padding: 10px 30px;
 }
 
-.avatar--header{
-    width:79px;
-    height:79px;
+.avatar--header {
+    width: 79px;
+    height: 79px;
 }
 
 .transactions-header__title {
@@ -105,88 +105,124 @@
 /* ============================
 商品情報エリア
 ============================ */
-.transactions-item{
+.transactions-item {
     display: flex;
     align-items: center;
     padding: 15px;
     border-radius: 6px;
-        border-top:2px solid #5F5F5F;
-    border-bottom:2px solid #5F5F5F;
+    border-top: 2px solid #5f5f5f;
+    border-bottom: 2px solid #5f5f5f;
 }
-
 
 .transactions-item__image img {
     width: 203px;
     height: 206px;
     object-fit: cover;
     margin-right: 20px;
-    margin-left:15px;
+    margin-left: 15px;
 }
 
 .transactions-item__name {
     font-size: 48px;
     font-weight: 700;
-    color:#000000;
+    color: #000000;
 }
 
 .transactions-item__price {
     font-size: 36px;
     font-weight: 400px;
-    color:#000000;
+    color: #000000;
 }
 
 /* ============================
 メッセージ一覧
 ============================ */
-.transactions-messages {
+/* .transactions-message {
+    min-width:600px;
     margin: 25px 30px 100px 30px;
+    max-width: 100%;
+    width: fit-content;
+} */
+
+.transactions-message__profile {
+    display: flex;
+    align-items: center;
 }
 
 /* メッセージ共通 */
 .transactions-message {
+    max-width: 1500px;
+    min-width: 600px;
     display: flex;
-    margin-bottom: 18px;
-    max-width: 70%;
+    flex-direction: column;
+    margin: 25px 30px 100px 30px;
+}
+
+.transactions-message__profile {
+    gap: 20px;
 }
 
 .avatar {
     border-radius: 50%;
     object-fit: cover;
     display: block;
-    background: #D9D9D9;
+    background: #d9d9d9;
 }
 .avatar--message {
     width: 60px;
     height: 60px;
-    /* display: inline-block; */
+}
+
+.transactions-message__user {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.transactions-message__body {
+    max-width: 100%;
+    width: auto;
+    min-width: 0;
+    padding: 10px 50px;
+    border-radius: 4px;
+    background-color: #d9d9d9;
+    margin-top: 10px;
+}
+
+.transactions-message__text {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+    background-color: #d9d9d9;
 }
 
 /* 自分のメッセージ */
 .transactions-message--me {
     margin-left: auto;
-    flex-direction: row-reverse;
+    justify-content: flex-end;
 }
 
-.transactions-message--me .transactions-message__body {
-    background: #d1f0ff;
-}
-
-/* 相手のメッセージ */
-.transactions-message--other .transactions-message__body {
-    background: #ffffff;
-}
-
-.transactions-message__body {
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin: 0 10px;
-}
-
-.transactions-message__header {
+.transactions-message--me .transactions-message__profile {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 6px;
-    font-size: 12px;
+    flex-direction: row-reverse; /* アバターを右側に */
+    align-items: center;
+}
+
+/* 相手のメッセージ（左寄せ） */
+.transactions-message--other {
+    margin-right: auto;
+}
+
+.transactions-message--other .transactions-message__profile {
+    display: flex;
+    flex-direction: row; /* アバターを左側に */
+    align-items: center;
+}
+
+.transactions-message__actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 /* ============================
