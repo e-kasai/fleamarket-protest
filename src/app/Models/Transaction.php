@@ -12,7 +12,8 @@ class Transaction extends Model
     use HasFactory;
 
     const STATUS_WIP          = 1;  // 取引中
-    const STATUS_COMPLETED    = 2;  // 取引完了（購入済み）
+    const STATUS_CONFIRMED    = 2;  // 購入者が取引完了ボタン押下
+    const STATUS_COMPLETED    = 3;  // 双方が評価を完了した時点
 
     protected $fillable = [
         'item_id',
