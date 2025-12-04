@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Transaction;
 use App\Models\TransactionMessage;
+use App\Models\Rating;
 use App\Http\Requests\TransactionMessageRequest;
 
 
@@ -14,6 +15,8 @@ class TransactionMessageController extends Controller
     public function show(Transaction $transaction)
     {
         $user = auth()->user();
+        $buyerId  = $transaction->buyer_id;
+        $sellerId = $transaction->seller_id;
 
         // 購入者でも出品者でもない場合は４０３
         if ($transaction->buyer_id !== $user->id && $transaction->seller_id !== $user->id) {
@@ -31,7 +34,10 @@ class TransactionMessageController extends Controller
             $query->where('buyer_id', $user->id)
                 ->orWhere('seller_id', $user->id);
         })
-            ->where('status', Transaction::STATUS_WIP)
+            ->whereIn('status', [
+                Transaction::STATUS_WIP,
+                Transaction::STATUS_CONFIRMED
+            ])
             ->where('id', '!=', $transaction->id)
             ->with('item')
             ->withCount([
@@ -59,7 +65,22 @@ class TransactionMessageController extends Controller
             ->where('is_read', false)
             ->update(['is_read' => true]);
 
-        return view('transaction_chat', compact('transaction', 'wipTransactions', 'partner'));
+        // 購入者が評価済
+        $buyerHasRated = Rating::where('transaction_id', $transaction->id)
+            ->where('from_user_id', $buyerId)
+            ->exists();
+
+        // 出品者が評価済
+        $sellerHasRated = Rating::where('transaction_id', $transaction->id)
+            ->where('from_user_id', $sellerId)
+            ->exists();
+
+        // 購入者のモーダル表示条件
+        $showBuyerModal = !$buyerHasRated && $transaction->status === Transaction::STATUS_CONFIRMED;
+        // 出品者のモーダル表示条件
+        $showSellerModal = $buyerHasRated && !$sellerHasRated;
+
+        return view('transaction_chat', compact('transaction', 'wipTransactions', 'partner', 'showBuyerModal', 'showSellerModal'));
     }
 
     // 取引画面チャット投稿
@@ -136,7 +157,4 @@ class TransactionMessageController extends Controller
         $message->delete();
         return back()->with('message', 'メッセージを削除しました');;
     }
-
-
-    
 }

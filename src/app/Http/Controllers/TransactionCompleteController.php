@@ -24,10 +24,9 @@ class TransactionCompleteController extends Controller
 
         // ステータス更新
         $transaction->update([
-            'status' => Transaction::STATUS_COMPLETED
+            'status' => Transaction::STATUS_CONFIRMED
         ]);
 
-        // モーダルを開くフラグ
-        return back()->with('openRatingModal', true);
+        return back();
     }
 }

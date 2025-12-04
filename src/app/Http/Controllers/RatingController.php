@@ -51,7 +51,6 @@ class RatingController extends Controller
             $transaction->update(['status' => Transaction::STATUS_CONFIRMED]);
         }
 
-
         Rating::create([
             'transaction_id' => $transaction->id,
             'from_user_id'   => $userId,                // 評価した人
@@ -60,6 +59,24 @@ class RatingController extends Controller
                 : $buyerId,             // 出品者 → 購入者を評価
             'score'          => $request->score,
         ]);
+
+
+        // 購入者が評価済
+        $buyerHasRated = Rating::where('transaction_id', $transaction->id)
+            ->where('from_user_id', $buyerId)
+            ->exists();
+
+        // 出品者が評価済
+        $sellerHasRated = Rating::where('transaction_id', $transaction->id)
+            ->where('from_user_id', $sellerId)
+            ->exists();
+
+
+        if ($buyerHasRated && $sellerHasRated) {
+            $transaction->update([
+                'status' => Transaction::STATUS_COMPLETED
+            ]);
+        }
 
         return redirect('/')
             ->with('message', '評価が完了しました');

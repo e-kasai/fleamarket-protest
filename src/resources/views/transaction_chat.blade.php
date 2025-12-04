@@ -165,7 +165,7 @@
 @endsection
 
 {{-- 取引完了後：評価モーダル --}}
-@if (session("openRatingModal"))
+@if ($showBuyerModal || $showSellerModal)
     <div id="ratingModal" class="rating-modal">
         <div class="rating-modal__overlay"></div>
 
@@ -247,7 +247,7 @@
         });
     </script>
 
-    @if (session("openRatingModal"))
+    @if ($showBuyerModal || $showSellerModal)
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const modal = document.getElementById('ratingModal');
