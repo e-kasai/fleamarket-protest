@@ -112,8 +112,9 @@ root                                    
 
 # app_test DBを作成
 CREATE DATABASE app_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;  
-EXIT;
-EXIT;
+EXIT
+# 小文字で
+exit
 
 # テスト用DBのマイグレーション
 docker compose exec php bash                  
