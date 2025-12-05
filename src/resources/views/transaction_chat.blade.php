@@ -61,7 +61,7 @@
             </section>
 
             {{-- メッセージ一覧 --}}
-            <section class="transactions-message">
+            <section class="transactions-message-area">
                 @foreach ($transaction->messages as $message)
                     <div
                         class="transactions-message {{ $message->user_id === auth()->id() ? 'transactions-message--me' : 'transactions-message--other' }}">
