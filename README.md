@@ -31,7 +31,7 @@ coachtechフリマ
 git clone git@github.com:e-kasai/fleamarket-protest.git        # SSHの場合
 git clone https://github.com/e-kasai/fleamarket-protest.git    # HTTPSの場合
 
-cd flea_market
+cd fleamarket-protest
 docker compose up -d --build
 
 ```
