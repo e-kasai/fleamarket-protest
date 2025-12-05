@@ -150,6 +150,7 @@
 ============================ */
 .transactions-message {
     display: flex;
+    min-height: 40rem;
     flex-direction: column;
     margin: clamp(1.6rem, 2vw, 2.5rem) clamp(2rem, 3vw, 4rem);
 }
@@ -643,7 +644,6 @@ PC:1024〜1539.98px
         margin: 0;
     }
 
-    /* 本文をサイドバーの下へ */
     .transactions-main {
         width: 100%;
         order: 2;
