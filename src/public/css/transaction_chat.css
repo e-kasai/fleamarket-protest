@@ -241,7 +241,7 @@
 }
 
 /* ============================
-下部入力フォーム
+新規投稿フォーム
 ============================ */
 .transactions-input {
     display: flex;
@@ -250,7 +250,6 @@
     left: 260px; /* サイドバー分 */
     right: 0;
     background: #fff;
-
     padding: 5px 20px;
 }
 
@@ -302,6 +301,35 @@
     height: 61px;
     object-fit: contain;
     cursor: pointer;
+}
+
+/* ============================
+編集用フォーム
+============================ */
+
+.transactions-input__footer {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.transactions-input__edit {
+    width: 125px;
+    background-color: #ff7676;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin-left: 20px;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+
+.message-edit__form--text{
+    font-size: 20px;
+
 }
 
 /* ============================
