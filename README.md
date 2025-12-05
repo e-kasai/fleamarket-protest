@@ -122,11 +122,10 @@ php artisan migrate:fresh --seed --env=testing  
 ```
 
 **補足**
-
 `.env.testing.example`に、Stripeダミーキーを事前にいれてあるため、<br>
-** `.env.testing`に Stripeキーの実際の値を設定する必要はありません。**
+`.env.testing`に Stripeキーの実際の値を設定する必要はありません。
 
-** 環境構築は以上です。**
+### 環境構築は以上です
 
 ## テスト一括実行コマンド
 
