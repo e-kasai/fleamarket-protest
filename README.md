@@ -2,7 +2,7 @@
 
 ## FleaMarket
 
-Laravel × Stripe × Docker で構築したフリマアプリ
+Laravel × Stripe × Dockerで構築したフリマアプリ
 
 ---
 
