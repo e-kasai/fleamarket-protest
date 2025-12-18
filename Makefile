@@ -11,6 +11,10 @@ init:
 
 # ローカル DB を初期化して seed
 fresh:
+	@echo "Waiting for MySQL..."
+	@until docker compose exec mysql mysqladmin ping -uroot -proot --silent; do \
+		sleep 2; \
+	done
 	docker compose exec php php artisan migrate:fresh --seed
 	@make test
 
