@@ -79,8 +79,6 @@ php artisan migrate:fresh --seed
 - Docker/docker-compose
 - MailHog v1.0.1
 - Stripe
-- JavaScript(ブラウザ実行)
-- Node.js(Prettier 用)
 
 ---
 
